@@ -1,57 +1,52 @@
-Mid-term Project: Predicting Bank Term Deposit Subscriptions
+Mid-Term Project: Predicting Term Deposits Subscription
 Overview
-This project is focused on building a machine learning model to predict whether a client will subscribe to a term deposit at a bank. The dataset used for this project comes from direct marketing campaigns (phone calls) of a Portuguese banking institution. The goal is to create a model that can effectively classify whether a client will subscribe to a term deposit based on various features provided in the dataset.
+This project aims to predict whether a client will subscribe to a term deposit based on data from a bank's direct marketing campaigns. The data was collected from a Portuguese bank and contains various client attributes and their responses to previous marketing efforts.
 
-Dataset
-Source: UCI Machine Learning Repository
-File: bank-additional-full.csv
-Description: The dataset includes 41,188 records with 21 attributes. The data is related to direct marketing campaigns (phone calls) conducted by a Portuguese banking institution. The classification goal is to predict if the client will subscribe (yes/no) to a term deposit.
-Key Features:
-Numerical Features: age, duration, campaign, pdays, previous, emp.var.rate, cons.price.idx, cons.conf.idx, euribor3m, nr.employed
-Categorical Features: job, marital, education, default, housing, loan, contact, month, day_of_week, poutcome
-Target Variable: y (whether the client subscribed to a term deposit)
 Exploratory Data Analysis (EDA)
-A thorough Exploratory Data Analysis was conducted to understand the distribution of the data, relationships between features, and the target variable. Key insights from the EDA include:
+We performed an in-depth exploratory data analysis to understand the distribution of the target variable and the features. Key insights include:
 
-Class Imbalance: The target variable is highly imbalanced with a majority of the records labeled as 'no' for term deposit subscription.
-Important Features: Features such as duration, nr.employed, emp.var.rate, and poutcome_success were found to have significant importance in predicting the target variable.
+Class Imbalance: The dataset is highly imbalanced, with the majority class being clients who did not subscribe to a term deposit.
+Important Features: Duration of the last contact, employment variables, and previous marketing outcomes are some of the most influential factors.
+Feature Engineering
+Two custom transformers were created to enhance the dataset:
+
+FeatureCreationTransformer: This transformer created additional features such as balance_per_duration and contacts_total, which were found to be significant.
+PreprocessingTransformer: This transformer handled rare categories and detected outliers using the Interquartile Range (IQR) method.
 Modeling
-Four machine learning models were developed and evaluated:
+We trained several models and compared their performance:
 
 Logistic Regression
 Decision Tree
 k-Nearest Neighbors (kNN)
-XGBoost (Extreme Gradient Boosting)
-Model Performance
-The models were evaluated using metrics such as Precision, Recall, F1-Score, and Confusion Matrix. XGBoost outperformed the other models in terms of accuracy and generalization to the test set.
-
+XGBoost
 Hyperparameter Tuning
-Hyperparameter tuning was performed using two methods:
+For the XGBoost model, we performed hyperparameter tuning using two methods:
 
-Randomized Search (Sklearn)
-Bayesian Optimization (Hyperopt)
-The tuned XGBoost model with Randomized Search achieved the highest F1-Score.
+Randomized Search: Resulted in an F1 Score of 0.915.
+Hyperopt: Resulted in an F1 Score of 0.835.
+Model Performance
+Model	Train Precision	Train Recall	Train F1	Test Precision	Test Recall	Test F1
+Logistic Regression	0.90	0.91	0.90	0.90	0.91	0.90
+Decision Tree	1.00	1.00	1.00	0.89	0.89	0.89
+kNN	0.92	0.93	0.93	0.89	0.90	0.89
+XGBoost	0.96	0.96	0.96	0.90	0.91	0.91
+Feature Importance
+The XGBoost model highlighted the most significant features:
 
-Results
-Best Model: XGBoost with hyperparameters tuned via Randomized Search
-F1-Score: 0.9153 (on test data)
-Key Features: duration, nr.employed, emp.var.rate, poutcome_success, and previous
+Duration: The length of the last contact is the most influential feature.
+Number of Employees (nr.employed): Reflects the economic environment.
+Employment Variation Rate (emp.var.rate): A measure of economic conditions.
+
+Error Analysis
+We analyzed the records where the model made errors:
+
+False Positives: Cases where the client was predicted to subscribe but did not. These cases typically had longer contact durations.
+False Negatives: Cases where the client was predicted not to subscribe but did. These cases often had shorter contact durations.
+
 Conclusion
-The project successfully built a predictive model for bank term deposit subscriptions using machine learning. XGBoost was the most effective model, especially after hyperparameter tuning. The analysis also highlighted the importance of certain features like duration of the last contact, which strongly influences the client's decision.
+The XGBoost model provided the best performance, balancing precision and recall effectively. However, the model still has room for improvement, particularly in reducing false negatives. Future work could involve exploring more sophisticated feature engineering and experimenting with other boosting algorithms like LightGBM or CatBoost.
 
 Future Work
-Handling Class Imbalance: Explore advanced techniques for handling class imbalance.
-Feature Engineering: Investigate additional feature engineering techniques to improve model performance.
-Model Deployment: Consider deploying the model using a framework like Flask or FastAPI.
-Repository Structure
-Mid_term_Project.ipynb: Jupyter notebook containing all the code, analysis, and results.
-README.md: Overview of the project and key findings (this file).
-Getting Started
-To replicate this project:
-
-Clone this repository:
-bash
-Copy code
-git clone https://github.com/yourusername/Mid-term-Project.git
-Open the Mid_term_Project.ipynb in Jupyter Notebook or Google Colab.
-Run the cells to reproduce the analysis.
+Feature Engineering: Experiment with additional interaction terms and polynomial features.
+Modeling: Try other advanced algorithms like LightGBM and CatBoost.
+Imbalance Handling: Use techniques like SMOTE or balanced class weights to handle the class imbalance better.
